@@ -1,15 +1,14 @@
-import { cac } from "cac";
+import { cac } from 'cac';
 import * as path from 'path';
-import {createDevServer} from './dev';
-import { build } from "./build";
-import {resolve} from 'path';
-const version = require("../../package.json").version;
+import { createDevServer } from './dev';
+import { build } from './build';
+import { resolve } from 'path';
 
-const cli = cac("island").version(version).help();
+const cli = cac('island').version('0.0.1').help();
 
 cli
-  .command("[root]", "start dev server")
-  .alias("dev")
+  .command('[root]', 'start dev server')
+  .alias('dev')
   .action(async (root: string) => {
     root = root ? path.resolve(root) : process.cwd();
     const server = await createDevServer(root);
@@ -18,10 +17,10 @@ cli
   });
 
 cli
-  .command("build [root]", "build for production")
+  .command('build [root]', 'build for production')
   .action(async (root: string) => {
-    root = resolve(root)
-    await build(root)
+    root = resolve(root);
+    await build(root);
   });
 
 cli.parse();
