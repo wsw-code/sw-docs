@@ -1,11 +1,27 @@
 import { readFile } from 'fs/promises';
 import { Plugin, IndexHtmlTransform } from 'vite';
-import { DEFAULT_HTML_PATH } from '../constants';
+import { DEFAULT_HTML_PATH, CLIENT_ENTRY_PATH } from '../constants';
 
 export function pluginIndexHtml(): Plugin {
   return {
     name: 'swdoc:index-html',
     apply: 'serve',
+    // 插入入口 script 标签
+    transformIndexHtml(html) {
+      return {
+        html,
+        tags: [
+          {
+            tag: 'script',
+            attrs: {
+              type: 'module',
+              src: `/@fs/${CLIENT_ENTRY_PATH}`
+            },
+            injectTo: 'body'
+          }
+        ]
+      };
+    },
     configureServer(server) {
       return () => {
         server.middlewares.use(async (req, res, next) => {
