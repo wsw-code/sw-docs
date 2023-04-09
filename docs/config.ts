@@ -1,1 +1,6 @@
-export default {a:1}
+import { defineConfig } from '../dist';
+
+export default defineConfig({
+  title: '123',
+  description:'sdsds',
+});
