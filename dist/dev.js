@@ -1,7 +1,8 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 
-var _chunk543SL2B3js = require('./chunk-543SL2B3.js');
+
+var _chunkZ3GBJ7WNjs = require('./chunk-Z3GBJ7WN.js');
 
 
 var _chunkCBUPLIN5js = require('./chunk-CBUPLIN5.js');
@@ -24,7 +25,7 @@ function pluginIndexHtml() {
             tag: "script",
             attrs: {
               type: "module",
-              src: `/@fs/${_chunk543SL2B3js.CLIENT_ENTRY_PATH}`
+              src: `/@fs/${_chunkZ3GBJ7WNjs.CLIENT_ENTRY_PATH}`
             },
             injectTo: "body"
           }
@@ -34,7 +35,7 @@ function pluginIndexHtml() {
     configureServer(server) {
       return () => {
         server.middlewares.use(async (req, res, next) => {
-          let html = await _promises.readFile.call(void 0, _chunk543SL2B3js.DEFAULT_HTML_PATH, "utf-8");
+          let html = await _promises.readFile.call(void 0, _chunkZ3GBJ7WNjs.DEFAULT_HTML_PATH, "utf-8");
           try {
             html = await server.transformIndexHtml(
               req.url,
@@ -55,48 +56,13 @@ function pluginIndexHtml() {
 
 // src/node/dev.ts
 var _pluginreact = require('@vitejs/plugin-react'); var _pluginreact2 = _interopRequireDefault(_pluginreact);
-
-// src/node/plugin-swdoc/config.ts
-var _path = require('path');
-
-var SITE_DATA_ID = "swdoc:site-data";
-function pluginConfig(config, restartServer) {
-  return {
-    name: "swdoc:config",
-    resolveId(id) {
-      if (id === SITE_DATA_ID) {
-        return "\0" + SITE_DATA_ID;
-      }
-    },
-    load(id) {
-      if (id === "\0" + SITE_DATA_ID) {
-        return `export default ${JSON.stringify(config.siteData)}`;
-      }
-    },
-    async handleHotUpdate(ctx) {
-      console.log(ctx.file);
-      const customWatchedFiles = [_vite.normalizePath.call(void 0, config.configPath)];
-      const include = (id) => customWatchedFiles.some((file) => id.includes(file));
-      if (include(ctx.file)) {
-        console.log(
-          `
-${_path.relative.call(void 0, config.root, ctx.file)} changed, restarting server...`
-        );
-        await restartServer();
-      }
-    }
-  };
-}
-
-// src/node/dev.ts
 async function createDevServer(root = process.cwd(), restartServer) {
   const config = await _chunkCBUPLIN5js.resolveConfig.call(void 0, root, "serve", "development");
   return _vite.createServer.call(void 0, {
-    root,
     plugins: [
       pluginIndexHtml(),
       _pluginreact2.default.call(void 0, ),
-      pluginConfig(config, restartServer)
+      _chunkZ3GBJ7WNjs.pluginConfig.call(void 0, config, restartServer)
     ]
   });
 }

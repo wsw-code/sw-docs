@@ -1,8 +1,11 @@
 import {
   CLIENT_ENTRY_PATH,
-  SERVER_ENTRY_PATH
-} from "./chunk-YIIII3XA.mjs";
-import "./chunk-HQALMRJB.mjs";
+  SERVER_ENTRY_PATH,
+  pluginConfig
+} from "./chunk-3LTN7SKO.mjs";
+import {
+  resolveConfig
+} from "./chunk-JCNMQAFC.mjs";
 
 // src/node/cli.ts
 import { cac } from "cac";
@@ -12,13 +15,19 @@ import { build as viteBuild } from "vite";
 import { pathToFileURL } from "url";
 import fs from "fs-extra";
 import { join } from "path";
-async function bundle(root) {
+import pluginReact from "@vitejs/plugin-react";
+async function bundle(root, config) {
   const resolveViteConfig = (isServer) => ({
     mode: "production",
     root,
+    plugins: [pluginReact(), pluginConfig(config)],
+    ssr: {
+      // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
+      noExternal: ["react-router-dom"]
+    },
     build: {
       ssr: isServer,
-      outDir: isServer ? ".temp" : "build",
+      outDir: isServer ? join(root, ".temp") : "build",
       rollupOptions: {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {
@@ -64,11 +73,16 @@ async function renderPage(render, root, clientBundle) {
   await fs.writeFile(join(root, "build/index.html"), html);
   await fs.remove(join(root, ".temp"));
 }
-async function build(root = process.cwd()) {
-  const [clientBundle, serverBundle] = await bundle(root);
+async function build(root = process.cwd(), config) {
+  const [clientBundle, serverBundle] = await bundle(root, config);
   const serverEntryPath = pathToFileURL(join(root, ".temp", "ssr-entry.js")) + "";
   const { render } = await import(serverEntryPath);
-  await renderPage(render, root, clientBundle);
+  try {
+    await renderPage(render, root, clientBundle);
+    console.log("build ok");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 // src/node/cli.ts
@@ -87,7 +101,12 @@ cli.command("[root]", "start dev server").alias("dev").action(async (root) => {
   await createServer();
 });
 cli.command("build [root]", "build for production").action(async (root) => {
-  root = resolve(root);
-  await build(root);
+  try {
+    root = resolve(root);
+    const config = await resolveConfig(root, "build", "production");
+    await build(root, config);
+  } catch (e) {
+    console.log(e);
+  }
 });
 cli.parse();

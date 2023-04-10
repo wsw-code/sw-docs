@@ -1,7 +1,11 @@
 "use strict"; function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }
 
 
-var _chunk543SL2B3js = require('./chunk-543SL2B3.js');
+
+var _chunkZ3GBJ7WNjs = require('./chunk-Z3GBJ7WN.js');
+
+
+var _chunkCBUPLIN5js = require('./chunk-CBUPLIN5.js');
 
 // src/node/cli.ts
 var _cac = require('cac');
@@ -11,15 +15,21 @@ var _vite = require('vite');
 var _url = require('url');
 var _fsextra = require('fs-extra'); var _fsextra2 = _interopRequireDefault(_fsextra);
 var _path = require('path');
-async function bundle(root) {
+var _pluginreact = require('@vitejs/plugin-react'); var _pluginreact2 = _interopRequireDefault(_pluginreact);
+async function bundle(root, config) {
   const resolveViteConfig = (isServer) => ({
     mode: "production",
     root,
+    plugins: [_pluginreact2.default.call(void 0, ), _chunkZ3GBJ7WNjs.pluginConfig.call(void 0, config)],
+    ssr: {
+      // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
+      noExternal: ["react-router-dom"]
+    },
     build: {
       ssr: isServer,
-      outDir: isServer ? ".temp" : "build",
+      outDir: isServer ? _path.join.call(void 0, root, ".temp") : "build",
       rollupOptions: {
-        input: isServer ? _chunk543SL2B3js.SERVER_ENTRY_PATH : _chunk543SL2B3js.CLIENT_ENTRY_PATH,
+        input: isServer ? _chunkZ3GBJ7WNjs.SERVER_ENTRY_PATH : _chunkZ3GBJ7WNjs.CLIENT_ENTRY_PATH,
         output: {
           format: isServer ? "cjs" : "esm"
         }
@@ -63,11 +73,16 @@ async function renderPage(render, root, clientBundle) {
   await _fsextra2.default.writeFile(_path.join.call(void 0, root, "build/index.html"), html);
   await _fsextra2.default.remove(_path.join.call(void 0, root, ".temp"));
 }
-async function build(root = process.cwd()) {
-  const [clientBundle, serverBundle] = await bundle(root);
+async function build(root = process.cwd(), config) {
+  const [clientBundle, serverBundle] = await bundle(root, config);
   const serverEntryPath = _url.pathToFileURL.call(void 0, _path.join.call(void 0, root, ".temp", "ssr-entry.js")) + "";
   const { render } = await Promise.resolve().then(() => _interopRequireWildcard(require(serverEntryPath)));
-  await renderPage(render, root, clientBundle);
+  try {
+    await renderPage(render, root, clientBundle);
+    console.log("build ok");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 // src/node/cli.ts
@@ -86,7 +101,12 @@ cli.command("[root]", "start dev server").alias("dev").action(async (root) => {
   await createServer();
 });
 cli.command("build [root]", "build for production").action(async (root) => {
-  root = _path.resolve.call(void 0, root);
-  await build(root);
+  try {
+    root = _path.resolve.call(void 0, root);
+    const config = await _chunkCBUPLIN5js.resolveConfig.call(void 0, root, "build", "production");
+    await build(root, config);
+  } catch (e) {
+    console.log(e);
+  }
 });
 cli.parse();

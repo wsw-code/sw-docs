@@ -3,7 +3,7 @@ import * as path from 'path';
 import { createDevServer } from './dev';
 import { build } from './build';
 import { resolve } from 'path';
-
+import { resolveConfig } from './config';
 const cli = cac('island').version('0.0.1').help();
 
 cli
@@ -25,8 +25,13 @@ cli
 cli
   .command('build [root]', 'build for production')
   .action(async (root: string) => {
-    root = resolve(root);
-    await build(root);
+    try {
+      root = resolve(root);
+      const config = await resolveConfig(root, 'build', 'production');
+      await build(root, config);
+    } catch (e) {
+      console.log(e);
+    }
   });
 
 cli.parse();

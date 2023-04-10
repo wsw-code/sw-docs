@@ -1,7 +1,6 @@
 import {
   defineConfig
-} from "./chunk-KHMM2OBC.mjs";
-import "./chunk-HQALMRJB.mjs";
+} from "./chunk-JCNMQAFC.mjs";
 export {
   defineConfig
 };
