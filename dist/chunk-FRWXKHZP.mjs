@@ -2,10 +2,6 @@ import {
   __dirname
 } from "./chunk-JCNMQAFC.mjs";
 
-// src/node/plugin-swdoc/config.ts
-import { relative } from "path";
-import { normalizePath } from "vite";
-
 // src/node/constants/index.ts
 import { join } from "path";
 var PACKAGE_ROOT = join(__dirname, "..");
@@ -24,6 +20,8 @@ var SERVER_ENTRY_PATH = join(
 );
 
 // src/node/plugin-swdoc/config.ts
+import { relative } from "path";
+import { normalizePath } from "vite";
 import { join as join2 } from "path";
 var SITE_DATA_ID = "swdoc:site-data";
 function pluginConfig(config, restartServer) {
@@ -65,6 +63,7 @@ ${relative(config.root, ctx.file)} changed, restarting server...`
 }
 
 export {
+  PACKAGE_ROOT,
   DEFAULT_HTML_PATH,
   CLIENT_ENTRY_PATH,
   SERVER_ENTRY_PATH,

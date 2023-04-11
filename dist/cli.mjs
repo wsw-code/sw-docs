@@ -2,7 +2,7 @@ import {
   CLIENT_ENTRY_PATH,
   SERVER_ENTRY_PATH,
   pluginConfig
-} from "./chunk-3LTN7SKO.mjs";
+} from "./chunk-FRWXKHZP.mjs";
 import {
   resolveConfig
 } from "./chunk-JCNMQAFC.mjs";
