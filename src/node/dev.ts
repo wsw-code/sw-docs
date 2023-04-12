@@ -21,6 +21,11 @@ export async function createDevServer(
       pluginRoutes({
         root: config.root
       })
-    ]
+    ],
+    server: {
+      fs: {
+        allow: [PACKAGE_ROOT]
+      }
+    }
   });
 }

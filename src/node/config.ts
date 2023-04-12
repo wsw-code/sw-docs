@@ -9,6 +9,7 @@ type RawConfig =
   | (() => UserConfig | Promise<UserConfig>);
 
 function getUserConfigPath(root: string) {
+  console.log('root', root);
   try {
     const supportConfigFiles = ['config.ts', 'config.js'];
     const configPath = supportConfigFiles

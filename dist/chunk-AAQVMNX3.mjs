@@ -1,11 +1,19 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }// src/node/config.ts
-var _vite = require('vite');
-var _path = require('path');
-var _fsextra = require('fs-extra'); var _fsextra2 = _interopRequireDefault(_fsextra);
+// node_modules/.pnpm/tsup@6.7.0_typescript@5.0.3/node_modules/tsup/assets/esm_shims.js
+import { fileURLToPath } from "url";
+import path from "path";
+var getFilename = () => fileURLToPath(import.meta.url);
+var getDirname = () => path.dirname(getFilename());
+var __dirname = /* @__PURE__ */ getDirname();
+
+// src/node/config.ts
+import { loadConfigFromFile } from "vite";
+import { resolve } from "path";
+import fs from "fs-extra";
 function getUserConfigPath(root) {
+  console.log("root", root);
   try {
     const supportConfigFiles = ["config.ts", "config.js"];
-    const configPath = supportConfigFiles.map((file) => _path.resolve.call(void 0, root, file)).find(_fsextra2.default.pathExistsSync);
+    const configPath = supportConfigFiles.map((file) => resolve(root, file)).find(fs.pathExistsSync);
     return configPath;
   } catch (e) {
     console.error(`Failed to load user config: ${e}`);
@@ -14,7 +22,7 @@ function getUserConfigPath(root) {
 }
 async function resolveUserConfig(root, command, mode) {
   const configPath = getUserConfigPath(root);
-  const result = await _vite.loadConfigFromFile.call(void 0, 
+  const result = await loadConfigFromFile(
     {
       command,
       mode
@@ -51,7 +59,8 @@ function defineConfig(config) {
   return config;
 }
 
-
-
-
-exports.resolveConfig = resolveConfig; exports.defineConfig = defineConfig;
+export {
+  __dirname,
+  resolveConfig,
+  defineConfig
+};

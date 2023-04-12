@@ -1,18 +1,14 @@
-import {
-  __dirname
-} from "./chunk-JCNMQAFC.mjs";
-
-// src/node/constants/index.ts
-import { join } from "path";
-var PACKAGE_ROOT = join(__dirname, "..");
-var DEFAULT_HTML_PATH = join(PACKAGE_ROOT, "template.html");
-var CLIENT_ENTRY_PATH = join(
+"use strict";Object.defineProperty(exports, "__esModule", {value: true});// src/node/constants/index.ts
+var _path = require('path');
+var PACKAGE_ROOT = _path.join.call(void 0, __dirname, "..");
+var DEFAULT_HTML_PATH = _path.join.call(void 0, PACKAGE_ROOT, "template.html");
+var CLIENT_ENTRY_PATH = _path.join.call(void 0, 
   PACKAGE_ROOT,
   "src",
   "runtime",
   "client-entry.tsx"
 );
-var SERVER_ENTRY_PATH = join(
+var SERVER_ENTRY_PATH = _path.join.call(void 0, 
   PACKAGE_ROOT,
   "src",
   "runtime",
@@ -20,9 +16,9 @@ var SERVER_ENTRY_PATH = join(
 );
 
 // src/node/plugin-swdoc/config.ts
-import { relative } from "path";
-import { normalizePath } from "vite";
-import { join as join2 } from "path";
+
+var _vite = require('vite');
+
 var SITE_DATA_ID = "swdoc:site-data";
 function pluginConfig(config, restartServer) {
   return {
@@ -32,7 +28,7 @@ function pluginConfig(config, restartServer) {
         root: PACKAGE_ROOT,
         resolve: {
           alias: {
-            "@runtime": join2(PACKAGE_ROOT, "src", "runtime", "index.ts")
+            "@runtime": _path.join.call(void 0, PACKAGE_ROOT, "src", "runtime", "index.ts")
           }
         }
       };
@@ -49,12 +45,12 @@ function pluginConfig(config, restartServer) {
     },
     async handleHotUpdate(ctx) {
       console.log(ctx.file);
-      const customWatchedFiles = [normalizePath(config.configPath)];
+      const customWatchedFiles = [_vite.normalizePath.call(void 0, config.configPath)];
       const include = (id) => customWatchedFiles.some((file) => id.includes(file));
       if (include(ctx.file)) {
         console.log(
           `
-${relative(config.root, ctx.file)} changed, restarting server...`
+${_path.relative.call(void 0, config.root, ctx.file)} changed, restarting server...`
         );
         await restartServer();
       }
@@ -62,10 +58,10 @@ ${relative(config.root, ctx.file)} changed, restarting server...`
   };
 }
 
-export {
-  PACKAGE_ROOT,
-  DEFAULT_HTML_PATH,
-  CLIENT_ENTRY_PATH,
-  SERVER_ENTRY_PATH,
-  pluginConfig
-};
+
+
+
+
+
+
+exports.PACKAGE_ROOT = PACKAGE_ROOT; exports.DEFAULT_HTML_PATH = DEFAULT_HTML_PATH; exports.CLIENT_ENTRY_PATH = CLIENT_ENTRY_PATH; exports.SERVER_ENTRY_PATH = SERVER_ENTRY_PATH; exports.pluginConfig = pluginConfig;

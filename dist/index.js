@@ -1,6 +1,6 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true});
 
-var _chunkCBUPLIN5js = require('./chunk-CBUPLIN5.js');
+var _chunkTU5ZQHWFjs = require('./chunk-TU5ZQHWF.js');
 
 
-exports.defineConfig = _chunkCBUPLIN5js.defineConfig;
+exports.defineConfig = _chunkTU5ZQHWFjs.defineConfig;
