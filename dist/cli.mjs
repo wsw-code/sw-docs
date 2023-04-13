@@ -1,8 +1,8 @@
 import {
   CLIENT_ENTRY_PATH,
   SERVER_ENTRY_PATH,
-  pluginConfig
-} from "./chunk-W42VZDI3.mjs";
+  createVitePlugins
+} from "./chunk-BRDY53NW.mjs";
 import {
   resolveConfig
 } from "./chunk-AAQVMNX3.mjs";
@@ -15,12 +15,12 @@ import { build as viteBuild } from "vite";
 import { pathToFileURL } from "url";
 import fs from "fs-extra";
 import { join } from "path";
-import pluginReact from "@vitejs/plugin-react";
 async function bundle(root, config) {
   const resolveViteConfig = (isServer) => ({
     mode: "production",
     root,
-    plugins: [pluginReact(), pluginConfig(config)],
+    // plugins: [pluginReact(), pluginConfig(config)],
+    plugins: createVitePlugins(config),
     ssr: {
       // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
       noExternal: ["react-router-dom"]
