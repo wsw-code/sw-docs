@@ -1,14 +1,18 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }// src/node/constants/index.ts
-var _path = require('path'); var _path2 = _interopRequireDefault(_path);
-var PACKAGE_ROOT = _path.join.call(void 0, __dirname, "..");
-var DEFAULT_HTML_PATH = _path.join.call(void 0, PACKAGE_ROOT, "template.html");
-var CLIENT_ENTRY_PATH = _path.join.call(void 0, 
+import {
+  __dirname
+} from "./chunk-AAQVMNX3.mjs";
+
+// src/node/constants/index.ts
+import { join } from "path";
+var PACKAGE_ROOT = join(__dirname, "..");
+var DEFAULT_HTML_PATH = join(PACKAGE_ROOT, "template.html");
+var CLIENT_ENTRY_PATH = join(
   PACKAGE_ROOT,
   "src",
   "runtime",
   "client-entry.tsx"
 );
-var SERVER_ENTRY_PATH = _path.join.call(void 0, 
+var SERVER_ENTRY_PATH = join(
   PACKAGE_ROOT,
   "src",
   "runtime",
@@ -16,7 +20,7 @@ var SERVER_ENTRY_PATH = _path.join.call(void 0,
 );
 
 // src/node/plugin-swdoc/indexHtml.ts
-var _promises = require('fs/promises');
+import { readFile } from "fs/promises";
 function pluginIndexHtml() {
   return {
     name: "swdoc:index-html",
@@ -40,7 +44,7 @@ function pluginIndexHtml() {
     configureServer(server) {
       return () => {
         server.middlewares.use(async (req, res, next) => {
-          let html = await _promises.readFile.call(void 0, DEFAULT_HTML_PATH, "utf-8");
+          let html = await readFile(DEFAULT_HTML_PATH, "utf-8");
           try {
             html = await server.transformIndexHtml(
               req.url,
@@ -60,12 +64,12 @@ function pluginIndexHtml() {
 }
 
 // src/node/vitePlugins.ts
-var _pluginreact = require('@vitejs/plugin-react'); var _pluginreact2 = _interopRequireDefault(_pluginreact);
+import pluginReact from "@vitejs/plugin-react";
 
 // src/node/plugin-swdoc/config.ts
-
-var _vite = require('vite');
-
+import { relative } from "path";
+import { normalizePath } from "vite";
+import { join as join2 } from "path";
 var SITE_DATA_ID = "swdoc:site-data";
 function pluginConfig(config, restartServer) {
   return {
@@ -75,7 +79,7 @@ function pluginConfig(config, restartServer) {
         root: PACKAGE_ROOT,
         resolve: {
           alias: {
-            "@runtime": _path.join.call(void 0, PACKAGE_ROOT, "src", "runtime", "index.ts")
+            "@runtime": join2(PACKAGE_ROOT, "src", "runtime", "index.ts")
           }
         }
       };
@@ -92,12 +96,12 @@ function pluginConfig(config, restartServer) {
     },
     async handleHotUpdate(ctx) {
       console.log(ctx.file);
-      const customWatchedFiles = [_vite.normalizePath.call(void 0, config.configPath)];
+      const customWatchedFiles = [normalizePath(config.configPath)];
       const include = (id) => customWatchedFiles.some((file) => id.includes(file));
       if (include(ctx.file)) {
         console.log(
           `
-${_path.relative.call(void 0, config.root, ctx.file)} changed, restarting server...`
+${relative(config.root, ctx.file)} changed, restarting server...`
         );
         await restartServer();
       }
@@ -106,9 +110,9 @@ ${_path.relative.call(void 0, config.root, ctx.file)} changed, restarting server
 }
 
 // src/node/plugin-routes/RouteService.ts
-var _fastglob = require('fast-glob'); var _fastglob2 = _interopRequireDefault(_fastglob);
-
-
+import fastGlob from "fast-glob";
+import { normalizePath as normalizePath2 } from "vite";
+import path from "path";
 var RouteService = class {
   #scanDir;
   #routeData = [];
@@ -116,14 +120,14 @@ var RouteService = class {
     this.#scanDir = scanDir;
   }
   async init() {
-    const files = _fastglob2.default.sync(["**/*.{js,jsx,ts,tsx,md,mdx}"], {
+    const files = fastGlob.sync(["**/*.{js,jsx,ts,tsx,md,mdx}"], {
       cwd: this.#scanDir,
       absolute: true,
       ignore: ["**/node_modules/**", "**/build/**", "config.ts"]
     }).sort();
     files.forEach((file) => {
-      const fileRelativePath = _vite.normalizePath.call(void 0, 
-        _path2.default.relative(this.#scanDir, file)
+      const fileRelativePath = normalizePath2(
+        path.relative(this.#scanDir, file)
       );
       const routePath = this.normalizeRoutePath(fileRelativePath);
       this.#routeData.push({
@@ -178,12 +182,35 @@ function pluginRoutes(options) {
 }
 
 // src/node/plugin-mdx/pluginMdxRollup.ts
-var _rollup = require('@mdx-js/rollup'); var _rollup2 = _interopRequireDefault(_rollup);
+import pluginMdx from "@mdx-js/rollup";
+import remarkPluginGFM from "remark-gfm";
+import rehypePluginAutolinkHeadings from "rehype-autolink-headings";
+import rehypePluginSlug from "rehype-slug";
+import remarkPluginMDXFrontMatter from "remark-mdx-frontmatter";
+import remarkPluginFrontmatter from "remark-frontmatter";
 function pluginMdxRollup() {
   return [
-    _rollup2.default.call(void 0, {
-      remarkPlugins: [],
-      rehypePlugins: []
+    pluginMdx({
+      remarkPlugins: [
+        remarkPluginGFM,
+        remarkPluginFrontmatter,
+        [remarkPluginMDXFrontMatter, { name: "frontmatter" }]
+      ],
+      rehypePlugins: [
+        rehypePluginSlug,
+        [
+          rehypePluginAutolinkHeadings,
+          {
+            properties: {
+              class: "header-anchor"
+            },
+            content: {
+              type: "text",
+              value: "#"
+            }
+          }
+        ]
+      ]
     })
   ];
 }
@@ -197,7 +224,7 @@ function createPluginMdx() {
 function createVitePlugins(config, restartServer) {
   return [
     pluginIndexHtml(),
-    _pluginreact2.default.call(void 0, {
+    pluginReact({
       jsxRuntime: "automatic"
     }),
     pluginConfig(config, restartServer),
@@ -208,9 +235,9 @@ function createVitePlugins(config, restartServer) {
   ];
 }
 
-
-
-
-
-
-exports.PACKAGE_ROOT = PACKAGE_ROOT; exports.CLIENT_ENTRY_PATH = CLIENT_ENTRY_PATH; exports.SERVER_ENTRY_PATH = SERVER_ENTRY_PATH; exports.createVitePlugins = createVitePlugins;
+export {
+  PACKAGE_ROOT,
+  CLIENT_ENTRY_PATH,
+  SERVER_ENTRY_PATH,
+  createVitePlugins
+};

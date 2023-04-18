@@ -1,7 +1,4 @@
 import { useRoutes } from 'react-router-dom';
-import A from '../../docs/guide/a';
-import B from '../../docs/b';
-import Index from '../../docs/guide/index';
 
 import { routes } from 'swdoc:routes';
 

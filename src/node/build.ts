@@ -5,8 +5,7 @@ import fs from 'fs-extra';
 import { join } from 'path';
 import { SiteConfig } from 'shared/types';
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
-import pluginReact from '@vitejs/plugin-react';
-import { pluginConfig } from './plugin-swdoc/config';
+
 import { createVitePlugins } from './vitePlugins';
 
 export async function bundle(root: string, config: SiteConfig) {
