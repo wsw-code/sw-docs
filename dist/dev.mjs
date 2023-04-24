@@ -1,7 +1,7 @@
 import {
   PACKAGE_ROOT,
   createVitePlugins
-} from "./chunk-F4J3EVJY.mjs";
+} from "./chunk-F3JNU5TV.mjs";
 import {
   resolveConfig
 } from "./chunk-AAQVMNX3.mjs";
@@ -12,15 +12,7 @@ async function createDevServer(root = process.cwd(), restartServer) {
   const config = await resolveConfig(root, "serve", "development");
   return createViteDevServer({
     root: PACKAGE_ROOT,
-    // plugins: [
-    //   pluginIndexHtml(),
-    //   pluginReact(),
-    //   pluginConfig(config, restartServer),
-    //   pluginRoutes({
-    //     root: config.root
-    //   })
-    // ],
-    plugins: createVitePlugins(config, restartServer),
+    plugins: await createVitePlugins(config, restartServer),
     server: {
       fs: {
         allow: [PACKAGE_ROOT]
