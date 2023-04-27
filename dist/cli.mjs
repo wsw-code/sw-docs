@@ -2,7 +2,7 @@ import {
   CLIENT_ENTRY_PATH,
   SERVER_ENTRY_PATH,
   createVitePlugins
-} from "./chunk-F3JNU5TV.mjs";
+} from "./chunk-5VI4LU6A.mjs";
 import {
   resolveConfig
 } from "./chunk-AAQVMNX3.mjs";
@@ -14,13 +14,13 @@ import { cac } from "cac";
 import { build as viteBuild } from "vite";
 import { pathToFileURL } from "url";
 import fs from "fs-extra";
-import { join } from "path";
+import { join, dirname } from "path";
 async function bundle(root, config) {
   const resolveViteConfig = async (isServer) => ({
     mode: "production",
     root,
     // plugins: [pluginReact(), pluginConfig(config)],
-    plugins: await createVitePlugins(config),
+    plugins: await createVitePlugins(config, void 0, isServer),
     ssr: {
       // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
       noExternal: ["react-router-dom"]
@@ -49,36 +49,41 @@ async function bundle(root, config) {
     console.log(e);
   }
 }
-async function renderPage(render, root, clientBundle) {
+async function renderPage(render, routes, root, clientBundle) {
   const clientChunk = clientBundle.output.find(
     (chunk) => chunk.type === "chunk" && chunk.isEntry
   );
   console.log("Rendering page in server side...");
-  const appHtml = render();
-  const html = `
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <title>title</title>
-      <meta name="description" content="xxx">
-    </head>
-    <body>
-      <div id="root">${appHtml}</div>
-      <script type="module" src="/${clientChunk?.fileName}"></script>
-    </body>
-  </html>`.trim();
-  await fs.ensureDir(join(root, "build"));
-  await fs.writeFile(join(root, "build/index.html"), html);
-  await fs.remove(join(root, ".temp"));
+  return Promise.all(
+    routes.map(async (route) => {
+      const routePath = route.path;
+      const appHtml = render(routePath);
+      const html = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>title</title>
+    <meta name="description" content="xxx">
+  </head>
+  <body>
+    <div id="root">${appHtml}</div>
+    <script type="module" src="/${clientChunk?.fileName}"></script>
+  </body>
+</html>`.trim();
+      const fileName = routePath.endsWith("/") ? `${routePath}index.html` : `${routePath}.html`;
+      await fs.ensureDir(join(root, "build", dirname(fileName)));
+      await fs.writeFile(join(root, "build", fileName), html);
+    })
+  );
 }
 async function build(root = process.cwd(), config) {
   const [clientBundle, serverBundle] = await bundle(root, config);
   const serverEntryPath = pathToFileURL(join(root, ".temp", "ssr-entry.js")) + "";
-  const { render } = await import(serverEntryPath);
+  const { render, routes } = await import(serverEntryPath);
   try {
-    await renderPage(render, root, clientBundle);
+    await renderPage(render, routes, root, clientBundle);
     console.log("build ok");
   } catch (error) {
     console.log(error);
