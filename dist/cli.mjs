@@ -2,7 +2,7 @@ import {
   CLIENT_ENTRY_PATH,
   SERVER_ENTRY_PATH,
   createVitePlugins
-} from "./chunk-5VI4LU6A.mjs";
+} from "./chunk-GGLVYXWI.mjs";
 import {
   resolveConfig
 } from "./chunk-AAQVMNX3.mjs";
@@ -14,7 +14,7 @@ import { cac } from "cac";
 import { build as viteBuild } from "vite";
 import { pathToFileURL } from "url";
 import fs from "fs-extra";
-import { join, dirname } from "path";
+import path, { join, dirname } from "path";
 async function bundle(root, config) {
   const resolveViteConfig = async (isServer) => ({
     mode: "production",
@@ -27,7 +27,7 @@ async function bundle(root, config) {
     },
     build: {
       ssr: isServer,
-      outDir: isServer ? join(root, ".temp") : "build",
+      outDir: isServer ? path.join(root, ".temp") : path.join(root, "build"),
       rollupOptions: {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {

@@ -162,8 +162,8 @@ var RouteService = class {
 
 // src/node/plugin-routes/index.ts
 var CONVENTIONAL_ROUTE_ID = "swdoc:routes";
-function pluginRoutes(options) {
-  const routeService = new RouteService(options.root);
+function pluginRoutes(options2) {
+  const routeService = new RouteService(options2.root);
   return {
     name: "swdoc:routes",
     async configResolved() {
@@ -176,7 +176,7 @@ function pluginRoutes(options) {
     },
     load(id) {
       if (id === "\0" + CONVENTIONAL_ROUTE_ID) {
-        return routeService.generateRoutesCode(options.isSSR || false);
+        return routeService.generateRoutesCode(options2.isSSR || false);
       }
     }
   };
@@ -515,8 +515,19 @@ async function pluginMdx2() {
 }
 
 // src/node/vitePlugins.ts
+import pluginUnocss from "unocss/vite";
+
+// src/node/unocssOptions.ts
+import { presetAttributify, presetWind, presetIcons } from "unocss";
+var options = {
+  presets: [presetAttributify(), presetWind({}), presetIcons()]
+};
+var unocssOptions_default = options;
+
+// src/node/vitePlugins.ts
 async function createVitePlugins(config, restartServer, isSSR = false) {
   return [
+    pluginUnocss(unocssOptions_default),
     pluginIndexHtml(),
     pluginReact({
       jsxRuntime: "automatic"
