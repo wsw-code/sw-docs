@@ -1,11 +1,29 @@
 import { Plugin } from 'vite';
+import { ComponentType } from 'react';
 import { RouteService } from './RouteService';
 // 本质: 把文件目录结构 -> 路由数据
+
+export type PageType = 'home' | 'doc' | 'custom' | '404';
+
+export interface FrontMatter {
+  title?: string;
+  description?: string;
+  pageType?: PageType;
+  sidebar?: boolean;
+  outline?: boolean;
+}
+
+export interface PageModule {
+  default: ComponentType;
+  frontmatter?: FrontMatter;
+  [key: string]: unknown;
+}
 
 export interface Route {
   path: string;
   element: React.ReactElement;
   filePath: string;
+  preload: () => Promise<PageModule>;
 }
 
 interface PluginOptions {

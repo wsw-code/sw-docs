@@ -1,7 +1,7 @@
 import {
   PACKAGE_ROOT,
   createVitePlugins
-} from "./chunk-GGLVYXWI.mjs";
+} from "./chunk-X5TN3O7I.mjs";
 import {
   resolveConfig
 } from "./chunk-AAQVMNX3.mjs";
