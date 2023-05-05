@@ -17,6 +17,7 @@ const updateAppearance = () => {
 
 if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
   updateAppearance();
+  window.addEventListener('storage', updateAppearance);
 }
 
 export function toggle() {

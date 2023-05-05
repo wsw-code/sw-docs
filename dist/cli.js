@@ -92,7 +92,7 @@ async function build(root = process.cwd(), config) {
 
 // src/node/cli.ts
 
-var cli = _cac.cac.call(void 0, "island").version("0.0.1").help();
+var cli = _cac.cac.call(void 0, "swdoc").version("0.0.1").help();
 cli.command("[root]", "start dev server").alias("dev").action(async (root) => {
   const createServer = async () => {
     const { createDevServer } = await Promise.resolve().then(() => _interopRequireWildcard(require("./dev.js")));

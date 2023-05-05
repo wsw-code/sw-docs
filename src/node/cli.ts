@@ -2,7 +2,7 @@ import { cac } from 'cac';
 import { build } from './build';
 import { resolve } from 'path';
 import { resolveConfig } from './config';
-const cli = cac('island').version('0.0.1').help();
+const cli = cac('swdoc').version('0.0.1').help();
 
 cli
   .command('[root]', 'start dev server')

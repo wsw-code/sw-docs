@@ -2,10 +2,10 @@ import {
   CLIENT_ENTRY_PATH,
   SERVER_ENTRY_PATH,
   createVitePlugins
-} from "./chunk-JEGFHJJY.mjs";
+} from "./chunk-ERZRHBOK.mjs";
 import {
   resolveConfig
-} from "./chunk-AAQVMNX3.mjs";
+} from "./chunk-CC3L7WPI.mjs";
 
 // src/node/cli.ts
 import { cac } from "cac";
@@ -92,7 +92,7 @@ async function build(root = process.cwd(), config) {
 
 // src/node/cli.ts
 import { resolve } from "path";
-var cli = cac("island").version("0.0.1").help();
+var cli = cac("swdoc").version("0.0.1").help();
 cli.command("[root]", "start dev server").alias("dev").action(async (root) => {
   const createServer = async () => {
     const { createDevServer } = await import("./dev.mjs");
