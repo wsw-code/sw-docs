@@ -4,6 +4,7 @@ import { SiteConfig } from 'shared/types/index';
 import { PACKAGE_ROOT } from '../../node/constants';
 import { join } from 'path';
 const SITE_DATA_ID = 'swdoc:site-data';
+import sirv from 'sirv';
 
 export function pluginConfig(
   config: SiteConfig,
@@ -14,6 +15,7 @@ export function pluginConfig(
     config() {
       return {
         root: PACKAGE_ROOT,
+
         resolve: {
           alias: {
             '@runtime': join(PACKAGE_ROOT, 'src', 'runtime', 'index.ts')
@@ -48,6 +50,10 @@ export function pluginConfig(
         // 重点: 重启 Dev Server
         await restartServer();
       }
+    },
+    configureServer(server) {
+      const publicDir = join(config.root, 'public');
+      server.middlewares.use(sirv(publicDir));
     }
   };
 }
