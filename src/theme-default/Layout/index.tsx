@@ -4,6 +4,7 @@ import '../styles/base.css';
 import '../styles/vars.css';
 import { usePageData } from '../../runtime';
 import { Nav } from '../components/Nav';
+import { DocLayout } from './DocLayout';
 
 import 'uno.css';
 import { HomeLayout } from './HomeLayout/index';
@@ -32,15 +33,12 @@ import { HomeLayout } from './HomeLayout/index';
 export function Layout() {
   const pageData = usePageData();
   const { pageType } = pageData;
+  console.log('pageType = ', pageType);
   const getContent = () => {
     if (pageType === 'home') {
       return <HomeLayout />;
     } else if (pageType === 'doc') {
-      return (
-        <div p="2" m="4">
-          正文页面
-        </div>
-      );
+      return <DocLayout />;
     } else {
       return <div>404 页面</div>;
     }
