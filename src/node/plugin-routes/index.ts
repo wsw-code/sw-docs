@@ -1,6 +1,6 @@
 import { Plugin } from 'vite';
-import { ComponentType } from 'react';
 import { RouteService } from './RouteService';
+import { PageModule } from 'shared/types';
 // 本质: 把文件目录结构 -> 路由数据
 
 export type PageType = 'home' | 'doc' | 'custom' | '404';
@@ -11,12 +11,6 @@ export interface FrontMatter {
   pageType?: PageType;
   sidebar?: boolean;
   outline?: boolean;
-}
-
-export interface PageModule {
-  default: ComponentType;
-  frontmatter?: FrontMatter;
-  [key: string]: unknown;
 }
 
 export interface Route {

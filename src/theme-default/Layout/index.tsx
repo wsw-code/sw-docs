@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { Content } from '@runtime';
 import '../styles/base.css';
 import '../styles/vars.css';
 import '../styles/doc.css';

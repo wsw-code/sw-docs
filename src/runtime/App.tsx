@@ -13,12 +13,13 @@ export async function initPageData(routePath: string): Promise<PageData> {
     // Preload route component
     // 待补充信息: preload 方法
     const moduleInfo = await (matched[0].route as Route).preload();
-    console.log(moduleInfo);
+    console.log(moduleInfo.toc);
     return {
       pageType: moduleInfo.frontmatter?.pageType ?? 'doc',
       siteData,
       frontmatter: moduleInfo.frontmatter,
-      pagePath: routePath
+      pagePath: routePath,
+      toc: moduleInfo.toc
     };
   }
   return {
