@@ -1,3 +1,7 @@
+
+/// <reference types="vite/client" />
+
+
 declare module 'swdoc:site-data' {
   import type { UserConfig } from 'shared/types';
   const siteData: UserConfig;
@@ -11,7 +15,5 @@ declare module 'swdoc:routes' {
   export { routes };
 }
 
-declare module '*.module.scss' {
-  const classes: { [key: string]: string };
-  export default classes;
-}
+
+
