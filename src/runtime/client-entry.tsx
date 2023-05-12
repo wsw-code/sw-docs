@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { DataContext } from './hooks';
 
 async function renderInBrowser() {
-  console.log(siteData);
   const containerEl = document.getElementById('root');
   if (!containerEl) {
     throw new Error('#root element not found');
